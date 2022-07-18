@@ -5,13 +5,11 @@ module.exports = {
   },
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/**/*.ts'],
-  setupFiles: [
-    '<rootDir>/src/__tests__/setup.ts'
-  ],
+  setupFiles: ['<rootDir>/src/__tests__/setup.ts'],
   testPathIgnorePatterns: [
-    "<rootDir>/dist/",
-    "<rootDir>/node_modules/",
-    "<rootDir>/src/__tests__/setup.ts",
+    '<rootDir>/dist/',
+    '<rootDir>/node_modules/',
+    '<rootDir>/src/__tests__/setup.ts',
   ],
   roots: ['<rootDir>'],
 };

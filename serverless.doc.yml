@@ -1,0 +1,28 @@
+documentation:
+  version: '1'
+  title: 'My API'
+  description: 'This is my API'
+  endpoints:
+    getProductsList:
+      summary: 'List All Products'
+      description: 'Lists all products from database.'
+      methodResponses:
+        - statusCode: 201
+          responseBody:
+            description: 'List of products'
+        - statusCode: 500
+          responseBody:
+            description: 'Internal server error'
+
+    getProductsById:
+      summary: 'Get Product By Id'
+      description: 'Get product by id'
+      methodResponses:
+        - statusCode: 200
+          responseBody:
+            description: 'Product object'
+        - statusCode: 500
+          responseBody:
+            description: 'Internal server error'
+
+  models: {}
