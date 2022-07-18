@@ -8,7 +8,7 @@ export const getProductsById = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     const { productId } = event.pathParameters as any;
-    const product = PRODUCTS.find(product => product.id === productId);
+    const product = PRODUCTS.find(product => product.id === Number(productId));
 
     if (!product) {
       return createHttpResponse(http2.constants.HTTP_STATUS_NOT_FOUND, {
