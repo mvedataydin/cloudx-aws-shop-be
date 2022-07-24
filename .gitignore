@@ -1,0 +1,9 @@
+# package directories
+node_modules
+dist
+coverage
+.serverless
+.webpack
+
+# files
+.DS_Store
