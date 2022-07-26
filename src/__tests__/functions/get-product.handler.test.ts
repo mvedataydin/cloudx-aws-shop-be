@@ -12,7 +12,7 @@ const MOCK_PRODUCT = {
   description: 'Yukon',
   count: 92,
   price: 27,
-  imageUrl: 'http://dummyimage.com/100x100.png/dddddd/000000',
+  image_url: 'http://dummyimage.com/100x100.png/dddddd/000000',
 };
 
 describe('Get Product Handler', () => {

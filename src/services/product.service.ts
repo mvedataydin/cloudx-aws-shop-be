@@ -1,25 +1,78 @@
-import products from '../data/products.json';
-import { HttpCode, HttpError } from '../utils/http.utils';
-import { Product } from '../types/product';
-import { delay } from '../utils/execution.utils';
+import { Product, ProductPostBody } from '../types/product';
+import { Stock } from '../types/stock';
 
-const MOCK_DELAY = 300;
+import db from '@database/database';
+import { HttpCode, HttpError } from '../utils/http.utils';
 
 export async function getProducts(): Promise<Product[]> {
-  return delay(MOCK_DELAY, () => products);
+  const queryText = `
+    SELECT *
+    FROM products
+    LEFT JOIN stocks
+    ON products.id = stocks.product_id
+  `;
+
+  const { rows } = await db.query(queryText);
+
+  return rows;
 }
 
 export async function getProduct(productId: string): Promise<Product> {
-  return delay(MOCK_DELAY, () => {
-    const product = products.find(product => product.id === productId);
+  const queryText = `
+    SELECT *
+    FROM products
+    LEFT JOIN stocks
+    ON products.id = stocks.product_id AND products.id = $1;
+  `;
+  const values = [productId];
 
-    if (!product) {
-      throw new HttpError(
-        HttpCode.NOT_FOUND,
-        `Product with id: ${productId} was not found`,
-      );
-    }
+  const { rows } = await db.query(queryText, values);
 
-    return product;
-  });
+  if (!rows[0]) {
+    throw new HttpError(
+      HttpCode.NOT_FOUND,
+      `Product with id: ${productId} was not found`,
+    );
+  }
+
+  return rows[0];
+}
+
+export async function createProduct(body: ProductPostBody): Promise<Product> {
+  const { count, description, image_url, price, title } = body;
+  const createProductQueryText = `
+    INSERT INTO products (title, description, price, image_url) VALUES
+    ($1, $2, $3, $4)
+    RETURNING *;
+  `;
+  const createStockQueryText = `
+    INSERT INTO stocks (product_id, count) VALUES
+    ($1, $2)
+    RETURNING *;
+  `;
+  const client = await db.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const { rows: productRows } = await db.query<Product>(
+      createProductQueryText,
+      [title, description, price, image_url],
+    );
+    const product = productRows[0];
+
+    const { rows: stockRows } = await db.query<Stock>(createStockQueryText, [
+      product.id,
+      count,
+    ]);
+
+    await client.query('COMMIT');
+
+    return { ...product, count: stockRows[0]?.count || null };
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
 }

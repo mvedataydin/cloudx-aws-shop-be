@@ -13,7 +13,7 @@ const MOCK_PRODUCTS = [
     description: 'Corvette',
     count: 100,
     price: 95,
-    imageUrl: 'http://dummyimage.com/100x100.png/cc0000/ffffff',
+    image_url: 'http://dummyimage.com/100x100.png/cc0000/ffffff',
   },
   {
     id: '2',
@@ -21,7 +21,7 @@ const MOCK_PRODUCTS = [
     description: 'Yukon',
     count: 92,
     price: 27,
-    imageUrl: 'http://dummyimage.com/100x100.png/dddddd/000000',
+    image_url: 'http://dummyimage.com/100x100.png/dddddd/000000',
   },
 ];
 

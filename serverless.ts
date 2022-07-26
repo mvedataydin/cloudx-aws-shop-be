@@ -13,7 +13,7 @@ const serverlessConfiguration: AWS = {
       bundle: true,
       minify: false,
       sourcemap: true,
-      exclude: ['aws-sdk'],
+      exclude: ['aws-sdk', 'pg-native'],
       target: 'node16',
       define: { 'require.resolve': undefined },
       platform: 'node',
@@ -41,6 +41,11 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      PG_HOST: process.env.PG_HOST,
+      PG_PORT: process.env.PG_PORT,
+      PG_DATABASE: process.env.PG_DATABASE,
+      PG_USERNAME: process.env.PG_USERNAME,
+      PG_PASSWORD: process.env.PG_PASSWORD,
     },
   },
   functions: {
@@ -107,6 +112,40 @@ const serverlessConfiguration: AWS = {
                   responseModels: {
                     'application/json': 'ServiceError',
                   },
+                },
+              ],
+            },
+          } as any,
+        },
+      ],
+    },
+    createProduct: {
+      handler: 'src/handler.createProduct',
+      events: [
+        {
+          http: {
+            method: 'post',
+            path: '/products',
+            cors: true,
+            documentation: {
+              description: 'Create a new product',
+              bodyType: 'ProductPostBody',
+              methodResponses: [
+                {
+                  statusCode: '200',
+                  description: 'A new product created successfully',
+                  responseModels: {
+                    'application/json': 'ProductList',
+                  },
+                },
+                {
+                  statusCode: '400',
+                  description:
+                    'Something went wrong while creating a new product',
+                },
+                {
+                  statusCode: '500',
+                  description: 'Service error',
                 },
               ],
             },

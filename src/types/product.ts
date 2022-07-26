@@ -4,5 +4,13 @@ export type Product = {
   description: string;
   count: number;
   price: number;
-  imageUrl: string;
+  image_url: string;
+};
+
+export type ProductPostBody = {
+  title: string;
+  description: string;
+  count: number;
+  price: number;
+  image_url: string;
 };
