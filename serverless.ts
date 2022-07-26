@@ -4,9 +4,9 @@ const serverlessConfiguration: AWS = {
   service: 'product-service',
   frameworkVersion: '3',
   plugins: [
+    'serverless-auto-swagger',
     'serverless-esbuild',
     'serverless-offline',
-    '@martinsson/serverless-openapi-documentation',
   ],
   custom: {
     esbuild: {
@@ -22,75 +22,10 @@ const serverlessConfiguration: AWS = {
     'serverless-offline': {
       httpPort: 8000,
     },
-    documentation: {
-      api: {
-        info: {
-          version: '1',
-          title: 'Product Service API',
-          description: 'Product Service API',
-        },
-      },
-      models: [
-        {
-          name: 'Product',
-          description: 'Product model',
-          contentType: 'application/json',
-          schema: {
-            type: 'object',
-            properties: {
-              id: {
-                type: 'string',
-                description: 'Product identifier',
-              },
-              title: {
-                type: 'string',
-                description: 'Product title',
-              },
-              description: {
-                type: 'string',
-                description: 'Product description',
-              },
-              price: {
-                type: 'number',
-                description: 'Product price',
-              },
-              imageUrl: {
-                type: 'string',
-                description: 'Product imageUrl',
-              },
-            },
-          },
-        },
-        {
-          name: 'ProductList',
-          description: 'List of products',
-          contentType: 'application/json',
-          schema: {
-            type: 'array',
-            items: {
-              $ref: '{{model: Product}}',
-            },
-          },
-        },
-        {
-          name: 'ServiceError',
-          description: 'Service error',
-          contentType: 'application/json',
-          schema: {
-            type: 'object',
-            properties: {
-              statusCode: {
-                type: 'number',
-                description: 'Status code of error',
-              },
-              message: {
-                type: 'string',
-                description: 'Error message',
-              },
-            },
-          },
-        },
-      ],
+    autoswagger: {
+      apiType: 'http',
+      basePath: '/${self:provider.stage}',
+      title: 'RS-AWS Product Shop API',
     },
   },
   provider: {
