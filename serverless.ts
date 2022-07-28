@@ -33,7 +33,7 @@ const serverlessConfiguration: AWS = {
     runtime: 'nodejs16.x',
     stage: 'dev',
     region: 'eu-west-1',
-    profile: 'mvedataydin_epam',
+    profile: 'vedataydin_epam',
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -57,34 +57,25 @@ const serverlessConfiguration: AWS = {
             method: 'get',
             path: '/products/{productId}',
             cors: true,
-            documentation: {
-              description: 'Get product by productId',
-              pathParams: [
-                {
-                  name: 'productId',
-                  description: 'Product identifier',
-                },
-              ],
-              methodResponses: [
-                {
-                  statusCode: '200',
-                  responseModels: {
-                    'application/json': 'Product',
-                  },
-                },
-                {
-                  statusCode: '404',
-                  responseModels: {
-                    'application/json': 'ServiceError',
-                  },
-                },
-                {
-                  statusCode: '500',
-                  responseModels: {
-                    'application/json': 'ServiceError',
-                  },
-                },
-              ],
+            summary: 'Get product by productId',
+            description: 'Get product by productId',
+            pathParams: [
+              {
+                name: 'productId',
+                description: 'Product identifier',
+              },
+            ],
+            responseData: {
+              200: {
+                description: 'Succesfull product item response',
+                bodyType: 'Product',
+              },
+              404: {
+                description: 'Product not found',
+              },
+              500: {
+                description: 'Service error',
+              },
             },
           } as any,
         },
@@ -98,22 +89,16 @@ const serverlessConfiguration: AWS = {
             method: 'get',
             path: '/products',
             cors: true,
-            documentation: {
-              description: 'Get all products',
-              methodResponses: [
-                {
-                  statusCode: '200',
-                  responseModels: {
-                    'application/json': 'ProductList',
-                  },
-                },
-                {
-                  statusCode: '500',
-                  responseModels: {
-                    'application/json': 'ServiceError',
-                  },
-                },
-              ],
+            summary: 'Get all products',
+            description: 'Get all products',
+            responseData: {
+              200: {
+                description: 'Succesfull product list response',
+                bodyType: 'ProductList',
+              },
+              500: {
+                description: 'Service error',
+              },
             },
           } as any,
         },
@@ -127,27 +112,19 @@ const serverlessConfiguration: AWS = {
             method: 'post',
             path: '/products',
             cors: true,
-            documentation: {
-              description: 'Create a new product',
-              bodyType: 'ProductPostBody',
-              methodResponses: [
-                {
-                  statusCode: '200',
-                  description: 'A new product created successfully',
-                  responseModels: {
-                    'application/json': 'ProductList',
-                  },
-                },
-                {
-                  statusCode: '400',
-                  description:
-                    'Something went wrong while creating a new product',
-                },
-                {
-                  statusCode: '500',
-                  description: 'Service error',
-                },
-              ],
+            bodyType: 'ProductPostBody',
+            responseData: {
+              201: {
+                description: 'Succesfull product creation',
+                bodyType: 'Product',
+              },
+              400: {
+                description:
+                  'Something went wrong. Invalid product parameters.',
+              },
+              500: {
+                description: 'Service error',
+              },
             },
           } as any,
         },

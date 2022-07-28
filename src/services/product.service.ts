@@ -1,5 +1,4 @@
-import { Product, ProductPostBody } from '../types/product';
-import { Stock } from '../types/stock';
+import { Product, ProductPostBody, Stock } from '../types/api-types';
 
 import db from '@database/database';
 import { HttpCode, HttpError } from '../utils/http.utils';
