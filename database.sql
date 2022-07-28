@@ -13,15 +13,13 @@ CREATE TABLE IF NOT EXISTS stocks (
     FOREIGN KEY ("product_id") REFERENCES "products" ("id")
 );
 
-INSERT INTO
-    products (title, description, price)
-VALUES
-    ('GMC', 'Yukon', 33000),
-    ('Isuzu', 'i-Series', 24599),
-    ('Mazda', 'MX-5', 29900)
-INSERT INTO
-    stocks (product_id, count)
-VALUES
-    ('b0f324b2-8ce4-45ec-8baa-176ed5174857', 4),
-    ('edcec9db-158d-43d0-a27a-babdc4e634b8', 2),
-    ('76c36267-a73a-45ad-815e-a7f8787879c8', 5)
+INSERT INTO products (title, description, price) VALUES
+    ('Range Rover', 'Vestibulum quam sapien, varius ut, blandit non.', 220500),
+    ('Spectra5', 'Cum sociis natoque penatibus et magnis.', 540250),
+    ('Caliber', 'Lorem ipsum dolor sit amet, consectetuer adipiscing.', 300000)
+
+
+INSERT INTO stocks (product_id, count) VALUES
+    ('111a4310-e598-4f86-bfaf-e4f30fab9f12', 32),
+    ('f7525f04-85ac-4382-abd5-5e446ab89b1a', 50),
+    ('a7542aab-ba3b-48f8-8a67-14f0aef3e577', 17)
