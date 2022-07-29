@@ -1,4 +1,4 @@
-import { IsInt, Length, IsUrl, IsOptional } from 'class-validator';
+import { IsInt, Length, IsUrl, IsOptional, Min } from 'class-validator';
 
 export class Product {
   constructor({
@@ -18,17 +18,16 @@ export class Product {
   @Length(1, 55)
   title: string;
 
-  @IsOptional()
   @Length(1, 255)
-  description?: string;
+  description: string;
 
-  @IsOptional()
   @IsInt()
-  count?: number;
+  @Min(0)
+  count: number;
 
-  @IsOptional()
   @IsInt()
-  price?: number;
+  @Min(0)
+  price: number;
 
   @IsOptional()
   @IsUrl()
