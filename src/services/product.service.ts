@@ -5,10 +5,10 @@ import { HttpCode, HttpError } from '../utils/http.utils';
 
 export async function getProducts(): Promise<Product[]> {
   const queryText = `
-    SELECT *
-    FROM products
-    LEFT JOIN stocks
-    ON products.id = stocks.product_id
+    SELECT id, title, description, price, count
+    FROM products p
+    LEFT JOIN stocks s 
+    ON p.id = s.product_id 
   `;
 
   const { rows } = await db.query(queryText);
@@ -18,10 +18,9 @@ export async function getProducts(): Promise<Product[]> {
 
 export async function getProduct(productId: string): Promise<Product> {
   const queryText = `
-    SELECT *
-    FROM products
-    LEFT JOIN stocks
-    ON products.id = stocks.product_id AND products.id = $1;
+    SELECT p.*, s."count"
+    FROM products p
+    JOIN stocks s ON p.id = s.product_id AND p.id = $1;
   `;
   const values = [productId];
 
