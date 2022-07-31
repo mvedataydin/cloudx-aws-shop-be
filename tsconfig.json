@@ -1,17 +1,26 @@
 {
+  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "target": "es2020",
-    "strict": true,
-    "preserveConstEnums": true,
-    "sourceMap": false,
-    "module": "commonjs",
+    "lib": ["ESNext"],
     "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "ES2020",
+    "outDir": "lib",
+    "resolveJsonModule": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": false
+    "experimentalDecorators": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "src/__tests__/**/*.test.ts"]
+  "include": ["src/**/*.ts", "serverless.ts"],
+  "exclude": [
+    "node_modules/**/*",
+    ".serverless/**/*",
+    "_warmup/**/*",
+    ".vscode/**/*"
+  ],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }
