@@ -1,11 +1,17 @@
 import type { AWS } from '@serverless/typescript';
 
 import importFileParser from '@functions/import-file-parser';
+import importProductsFile from '@functions/import-products-file';
 
 const serverlessConfiguration: AWS = {
   service: 'import-service',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild'],
+  plugins: [
+    'serverless-esbuild',
+    'serverless-dotenv-plugin',
+    'serverless-offline',
+  ],
+  useDotenv: true,
   provider: {
     name: 'aws',
     runtime: 'nodejs16.x',
@@ -34,7 +40,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { importFileParser },
+  functions: { importFileParser, importProductsFile },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -46,6 +52,9 @@ const serverlessConfiguration: AWS = {
       define: { 'require.resolve': undefined },
       platform: 'node',
       concurrency: 10,
+    },
+    'serverless-offline': {
+      httpPort: 8000,
     },
   },
 };
