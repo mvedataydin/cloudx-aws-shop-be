@@ -10,4 +10,5 @@ jspm_packages
 
 # environment
 .env
-.env.dev
+.env.development
+.env.local

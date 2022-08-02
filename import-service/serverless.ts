@@ -11,6 +11,7 @@ const serverlessConfiguration: AWS = {
     'serverless-dotenv-plugin',
     'serverless-offline',
   ],
+  configValidationMode: 'error',
   useDotenv: true,
   provider: {
     name: 'aws',
@@ -22,18 +23,22 @@ const serverlessConfiguration: AWS = {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
-    iamRoleStatements: [
-      {
-        Effect: 'Allow',
-        Action: 's3:ListBucket',
-        Resource: `arn:aws:s3:::${process.env.BUCKET_NAME}`,
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: ['s3:ListBucket'],
+            Resource: [`arn:aws:s3:::${process.env.BUCKET_NAME}`],
+          },
+          {
+            Effect: 'Allow',
+            Action: ['s3:*'],
+            Resource: [`arn:aws:s3:::${process.env.BUCKET_NAME}/*`],
+          },
+        ],
       },
-      {
-        Effect: 'Allow',
-        Action: 's3:*',
-        Resource: `arn:aws:s3:::${process.env.BUCKET_NAME}/*`,
-      },
-    ],
+    },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
