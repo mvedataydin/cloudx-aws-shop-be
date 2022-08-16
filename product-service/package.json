@@ -31,6 +31,7 @@
     "@types/pg": "^8.6.5",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
+    "aws-sdk-client-mock": "^1.0.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
@@ -45,13 +46,9 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "dotenv": "^16.0.1",
+    "@aws-sdk/client-sns": "^3.150.0",
     "class-validator": "^0.13.2",
+    "dotenv": "^16.0.1",
     "pg": "^8.7.3"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
