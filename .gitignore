@@ -1,0 +1,19 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+swagger
+
+# esbuild directories
+.esbuild
+
+# test directories
+coverage
+
+# auto generated
+.DS_Store
+
+# environment variables
+.env
