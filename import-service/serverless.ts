@@ -36,6 +36,11 @@ const serverlessConfiguration: AWS = {
             Action: ['s3:*'],
             Resource: [`arn:aws:s3:::${process.env.BUCKET_NAME}/*`],
           },
+          {
+            Effect: 'Allow',
+            Action: 'sqs:*',
+            Resource: ['${param:sqsArn}'],
+          },
         ],
       },
     },
