@@ -1,8 +1,12 @@
 import type { AWS } from '@serverless/typescript';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const serverlessConfiguration: AWS = {
   service: 'product-service',
   frameworkVersion: '3',
+  useDotenv: true,
   plugins: [
     'serverless-auto-swagger',
     'serverless-esbuild',
@@ -157,7 +161,7 @@ const serverlessConfiguration: AWS = {
       handler: 'src/handler.catalogBatchProcess',
       events: [
         {
-          s3: {
+          sqs: {
             batchSize: 5,
             maximumBatchingWindow: 60,
             arn: {
