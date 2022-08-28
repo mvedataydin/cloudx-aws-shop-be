@@ -1,0 +1,17 @@
+# package directories
+node_modules
+jspm_packages
+
+# Jest directories
+coverage
+
+# Serverless directories
+.serverless
+
+# esbuild directories
+.esbuild
+
+# environment
+.env
+.env.development
+.env.local
