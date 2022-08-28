@@ -1,4 +1,3 @@
-import 'source-map-support/register';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { middyfy } from '@libs/lambda';
 import { s3Client } from '@libs/s3-client';
