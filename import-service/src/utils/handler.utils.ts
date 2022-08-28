@@ -15,25 +15,16 @@ export const lambdaHandler =
     controllerCallback: (event: APIGatewayProxyEvent | S3Event) => Promise<any>,
   ) =>
   async (event: APIGatewayProxyEvent | S3Event) => {
-    const { Records } = event as S3Event;
-    const { body, pathParameters, queryStringParameters } =
-      event as APIGatewayProxyEvent;
-
     let statusCode: HttpCode;
     let result: any;
 
     try {
-      logger.log('REQ ===>', {
-        pathParameters,
-        queryStringParameters,
-        body,
-        Records,
-      });
+      logger.log('REQ ===>', event);
 
       result = await controllerCallback(event);
       statusCode = HttpCode.OK;
 
-      logger.log(`RES <=== [${statusCode}]`, body);
+      logger.log(`RES <=== [${statusCode}]`, event);
     } catch (err) {
       statusCode = err.statusCode || HttpCode.SERVER_ERROR;
 

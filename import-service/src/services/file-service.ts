@@ -7,6 +7,7 @@ import {
   DeleteObjectRequest,
 } from '@aws-sdk/client-s3';
 import { s3Client } from '@libs/s3-client';
+import { sqsClient, SendMessageCommand } from '@libs/sqs-client';
 import logger from '@utils/logger.utils';
 import type { S3EventRecord } from 'aws-lambda';
 
@@ -16,9 +17,20 @@ export class FileService {
       const chunks = [];
       stream
         .pipe(csv())
-        .on('data', chunk => {
+        .on('data', async chunk => {
           logger.log('[FileService] parsing chunk:', chunk);
           chunks.push(chunk);
+
+          await sqsClient.send(
+            new SendMessageCommand({
+              MessageBody: JSON.stringify(chunk),
+              QueueUrl: process.env.SQS_URL,
+            }),
+          );
+          logger.log(
+            'New product sent to queue ===> ',
+            JSON.stringify(chunk, null, 2),
+          );
         })
         .on('error', error => {
           logger.log('[FileService] parsing error', error);

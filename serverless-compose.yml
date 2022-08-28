@@ -1,0 +1,11 @@
+# serverless-compose.yml
+services:
+
+  product-service:
+    path: "product-service"
+
+  import-service:
+    path: "import-service"
+    params:
+      sqsURL: ${product-service.sqsURL}
+      sqsArn: ${product-service.sqsArn}

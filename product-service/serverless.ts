@@ -1,8 +1,12 @@
 import type { AWS } from '@serverless/typescript';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const serverlessConfiguration: AWS = {
   service: 'product-service',
   frameworkVersion: '3',
+  useDotenv: true,
   plugins: [
     'serverless-auto-swagger',
     'serverless-esbuild',
@@ -38,6 +42,26 @@ const serverlessConfiguration: AWS = {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: 'sqs:*',
+        Resource: [
+          {
+            'Fn::GetAtt': ['catalogItemsQueue', 'Arn'],
+          },
+        ],
+      },
+      {
+        Effect: 'Allow',
+        Action: 'sns:*',
+        Resource: [
+          {
+            Ref: 'createProductTopic',
+          },
+        ],
+      },
+    ],
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
@@ -46,6 +70,9 @@ const serverlessConfiguration: AWS = {
       PG_DATABASE: process.env.PG_DATABASE,
       PG_USERNAME: process.env.PG_USERNAME,
       PG_PASSWORD: process.env.PG_PASSWORD,
+      SNS_TOPIC_ARN: {
+        Ref: 'createProductTopic',
+      },
     },
   },
   functions: {
@@ -129,6 +156,71 @@ const serverlessConfiguration: AWS = {
           } as any,
         },
       ],
+    },
+    catalogBatchProcess: {
+      handler: 'src/handler.catalogBatchProcess',
+      events: [
+        {
+          sqs: {
+            batchSize: 5,
+            maximumBatchingWindow: 60,
+            arn: {
+              'Fn::GetAtt': ['catalogItemsQueue', 'Arn'],
+            },
+          } as any,
+        },
+      ],
+    },
+  },
+  resources: {
+    Resources: {
+      catalogItemsQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'catalogItemsQueue',
+        },
+      },
+      createProductTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'createProductTopic',
+        },
+      },
+      createProductSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Protocol: 'email',
+          Endpoint: 'mvedataydin@gmail.com',
+          TopicArn: {
+            Ref: 'createProductTopic',
+          },
+        },
+      },
+      createProductOverstockSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Protocol: 'email',
+          Endpoint: 'mvedataydin@hotmail.com',
+          TopicArn: {
+            Ref: 'createProductTopic',
+          },
+          FilterPolicy: {
+            overstock: ['true'],
+          },
+        },
+      },
+    },
+    Outputs: {
+      sqsURL: {
+        Value: {
+          Ref: 'catalogItemsQueue',
+        },
+      },
+      sqsArn: {
+        Value: {
+          'Fn::GetAtt': ['catalogItemsQueue', 'Arn'],
+        },
+      },
     },
   },
   package: { individually: true },

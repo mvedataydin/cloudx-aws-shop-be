@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { APIGatewayProxyEvent, SQSEvent } from 'aws-lambda';
 
 import { HttpCode } from './http.utils';
 import logger from './logger.utils';
@@ -10,19 +10,22 @@ const CORS_HEADERS = {
 
 /* Helper to handle base lambda logic */
 export const lambdaHandler =
-  (controllerCallback: (event: APIGatewayProxyEvent) => Promise<any>) =>
-  async (event: APIGatewayProxyEvent) => {
-    const { body, pathParameters, queryStringParameters } = event;
+  (
+    controllerCallback: (
+      event: APIGatewayProxyEvent | SQSEvent,
+    ) => Promise<any>,
+  ) =>
+  async (event: APIGatewayProxyEvent | SQSEvent) => {
     let statusCode: HttpCode;
     let result: any;
 
     try {
-      logger.log('REQ ===>', { pathParameters, queryStringParameters, body });
+      logger.log('REQ ===>', event);
 
       result = await controllerCallback(event);
       statusCode = HttpCode.OK;
 
-      logger.log(`RES <=== [${statusCode}]`, body);
+      logger.log(`RES <=== [${statusCode}]`, event);
     } catch (err) {
       statusCode = err.statusCode || HttpCode.SERVER_ERROR;
 

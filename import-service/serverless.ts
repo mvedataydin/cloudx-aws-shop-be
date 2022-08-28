@@ -36,12 +36,18 @@ const serverlessConfiguration: AWS = {
             Action: ['s3:*'],
             Resource: [`arn:aws:s3:::${process.env.BUCKET_NAME}/*`],
           },
+          {
+            Effect: 'Allow',
+            Action: 'sqs:*',
+            Resource: ['${param:sqsArn}'],
+          },
         ],
       },
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      SQS_URL: '${param:sqsURL}',
     },
   },
   // import the function via paths
