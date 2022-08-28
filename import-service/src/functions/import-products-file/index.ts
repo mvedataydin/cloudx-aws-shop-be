@@ -7,7 +7,18 @@ export default {
       http: {
         method: 'get',
         path: 'import',
-        cors: true,
+        cors: {
+          origin: '*',
+          headers: [
+            'ContentType',
+            'XAmzDate',
+            'Authorization',
+            'XApiKey',
+            'XAmzSecurityToken',
+            'XAmzUserAgent',
+          ],
+          allowCredentials: true,
+        },
         request: {
           parameters: {
             querystrings: {
@@ -16,6 +27,13 @@ export default {
               },
             },
           },
+        },
+        authorizer: {
+          name: 'tokenAuthorizer',
+          arn: 'arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:authorization-service-dev-basicAuthorizer',
+          identitySource: 'method.request.header.Authorization',
+          resultTtlInSeconds: 0,
+          type: 'token',
         },
       },
     },
